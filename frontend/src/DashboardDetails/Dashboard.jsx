@@ -7,6 +7,7 @@ import Sidebar from "./Sidebar";
 
 // future pages (abhi placeholder)
 import ProductDetails from "../pages/ProductDetails";
+import ProfileSummary from "./pages/ProfileSummary";
 function Dashboard() {
   const [activeSection, setActiveSection] = useState("dashboard");
 
@@ -22,18 +23,19 @@ function Dashboard() {
       {/* Main Area */}
       <div className="flex-1 mt-20">
         {activeSection === "dashboard" && (
+
+
+          <ProfileSummary />
           
-            
-            <RecentActivity />
-            
-         
+
+
         )}
 
         {activeSection === "student" && <ProductDetails />}
         {activeSection === "student" && <ProductDetails />}
         {activeSection === "profile" && <Profile />}
         {activeSection === "student" && <ProductDetails />}
-        
+
 
       </div>
     </div>

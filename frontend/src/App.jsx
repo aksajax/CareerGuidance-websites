@@ -1,7 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-
 import Navbar from './components/Navbar';
-
 import ProductList from "./pages/ProductList";
 import ProductDetails from "./pages/ProductDetails";
 import CartPage from './pages/CartPage';
@@ -14,43 +12,61 @@ import CollegeDetails from './collegepage/CollegeDetails';
 import WebsiteChat from './ChatBots/WebsiteChat';
 import Trys from './pages/Trys';
 import Homepage from './pages/Homepage';
-
 import PrivateRouter from './components/PrivateRouter';
 import Dashboard from './DashboardDetails/Dashboard';
 import Home from './pages/Home';
+import PersonalInfo from './DashboardDetails/pages/PersonalInfo';
+import ResumeBuilder from './DashboardDetails/pages/ResumeBuilder';
+import Resume from './DashboardDetails/pages/Resume';
+
+
+import ResumeAI from './ResumeApp/Pages/Home/ResumeAI';
+import ResumeState from './ResumeApp/Context/ResumeState';
+
+
+
 
 function App() {
   return (
+    <>
+    
     <Router>
-      <Navbar />
+      
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Homepage />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/products" element={<ProductList />} />
+          <Route path="/product/:id" element={<ProductDetails />} />
+          <Route path="/colleges" element={<CollegeList />} />
+          <Route path="/college/:id" element={<CollegeDetails />} />
 
-      <Routes>
+          <Route element={<PrivateRouter />}>
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/chatbot" element={<PDFChatBot />} />
+            <Route path="/chat" element={<WebsiteChat />} />
+            <Route path="/try" element={<Trys />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/personal-info" element={<PersonalInfo />} />
+            <Route path="/resumebuilder" element={<ResumeBuilder />} />
+            <Route path="/resume" element={<Resume />} />
+            <Route 
+    path="/resumes" 
+    element={
+      <ResumeState>
+        <ResumeAI />
+      </ResumeState>
+    } 
+  />
 
-        {/* 🌍 PUBLIC ROUTES */}
-        <Route path="/" element={<Homepage />} />
-        <Route path="/home" element={<Home />} />
-
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-
-        <Route path="/products" element={<ProductList />} />
-        <Route path="/product/:id" element={<ProductDetails />} />
-        <Route path="/colleges" element={<CollegeList />} />
-        <Route path="/college/:id" element={<CollegeDetails />} />
-
-        {/* 🔐 PROTECTED ROUTES */}
-        <Route element={<PrivateRouter />}>
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/checkout" element={<CheckoutPage />} />
-          <Route path="/chatbot" element={<PDFChatBot />} />
-          <Route path="/chat" element={<WebsiteChat />} />
-          <Route path="/try" element={<Trys />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-
-        </Route>
-
-      </Routes>
+          </Route>
+        </Routes>
+      
     </Router>
+    </>
   );
 }
 
