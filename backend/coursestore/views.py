@@ -328,12 +328,6 @@ class CourseDetailAPIView(APIView):
             return Response({"error": "Course not found"}, status=404)
 
 
-
-
-
-# # Groq Client Initialize karein
-
-# # Groq Client setup
 client = Groq(api_key=GROQ_KEY)
 
 class GenerateRoadmapView(APIView):
