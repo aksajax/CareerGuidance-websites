@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product, Category, Cart, CartItem,College
+from .models import Product, Category, Cart, CartItem,College, Course, Section, Lecture
 from django.contrib.auth.models import User
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -59,4 +59,31 @@ class CollegeSerializer(serializers.ModelSerializer):
         model = College
         fields = '__all__'
         
-        
+
+
+
+class CourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        # Sirf wahi fields jo aapke 'Course' model mein hain
+        fields = ['id', 'title', 'thumbnail', 'description', 'created_at']
+
+#U Courses --> List of Course
+class LectureSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lecture
+        fields = ['id', 'title', 'video_url', 'content', 'order']
+
+class SectionSerializer(serializers.ModelSerializer):
+    lectures = LectureSerializer(many=True, read_only=True) # Nested Lectures
+
+    class Meta:
+        model = Section
+        fields = ['id', 'title', 'order', 'lectures']
+
+class CourseDetailSerializer(serializers.ModelSerializer):
+    sections = SectionSerializer(many=True, read_only=True) # Nested Sections
+
+    class Meta:
+        model = Course
+        fields = ['id', 'title', 'description', 'thumbnail', 'sections']

@@ -8,6 +8,7 @@ import Sidebar from "./Sidebar";
 // future pages (abhi placeholder)
 import ProductDetails from "../pages/ProductDetails";
 import ProfileSummary from "./pages/ProfileSummary";
+import Apps from "../AIRoadmap/apps";
 function Dashboard() {
   const [activeSection, setActiveSection] = useState("dashboard");
 
@@ -33,7 +34,7 @@ function Dashboard() {
 
         {activeSection === "student" && <ProductDetails />}
         {activeSection === "student" && <ProductDetails />}
-        {activeSection === "profile" && <Profile />}
+        {activeSection === "roadmap" && <Apps />}
         {activeSection === "student" && <ProductDetails />}
 
 

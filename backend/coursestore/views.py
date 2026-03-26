@@ -3,18 +3,23 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.contrib.auth.models import User
-from .serializers import RegisterSerializer, UserSerializer
+from .serializers import RegisterSerializer, UserSerializer,CourseSerializer,CourseDetailSerializer
 from rest_framework import status
 from .models import Product, Category, Cart, CartItem, Order, OrderItem ,College
 from .serializers import ProductSerializer, CategorySerializer, CartSerializer, CartItemSerializer,CollegeSerializer
 from django.shortcuts import redirect
 from groq import Groq 
-# backend/views.py (Bas ye check karlo ki ye part aisa hi hai)
-
-
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
+import json
+from dotenv import load_dotenv
+from rest_framework.views import APIView
+from .models import Course,Section, Lecture
+
+
+
+load_dotenv()
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         data = super().validate(attrs)
@@ -291,3 +296,85 @@ def website_chatbot(request):
         # Yeh line aapke terminal mein error print karegi jisse pata chalega problem kya hai
         print("Backend Error:", str(e)) 
         return Response({"error": str(e)}, status=500)
+
+
+class CourseListAPIView(APIView):
+    # 1. Saare Courses dekhne ke liye (GET)
+    def get(self, request):
+        # courses = Courses.objects.all()
+        queryset = Course.objects.all()
+        serializer = CourseSerializer(queryset, many=True)
+        permission_classes = [AllowAny]
+        return Response(serializer.data)
+
+    # 2. Naya Course/Roadmap banane ke liye (POST)
+    def post(self, request):
+        serializer = CourseSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save() # Database mein save karega
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+#Udemy Courses --> List
+class CourseDetailAPIView(APIView):
+    def get(self, request, pk):
+        try:
+            # prefetch_related optimization lagana Udemy jaise bade data ke liye zaroori hai
+            course = Course.objects.prefetch_related('sections__lectures').get(pk=pk)
+            serializer = CourseDetailSerializer(course)
+            return Response(serializer.data)
+        except Course.DoesNotExist:
+            return Response({"error": "Course not found"}, status=404)
+
+
+
+
+
+# Groq Client Initialize karein
+GROQ_KEY = "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"
+# Groq Client setup
+client = Groq(api_key=GROQ_KEY)
+
+class GenerateRoadmapView(APIView):
+    def post(self, request):
+        topic = request.data.get('topic', '').lower()
+        
+        # 1. Pehle database mein saare courses ke titles le lo
+        existing_courses = Course.objects.all()
+        course_list = [{"id": c.id, "title": c.title} for c in existing_courses]
+
+        if not course_list:
+            return Response({"error": "No courses available in database"}, status=404)
+
+        # 2. Groq AI se pucho ki user ke topic ke liye best match kaunsa hai
+        prompt = f"""
+        User wants to learn: "{topic}"
+        Available courses in our database: {json.dumps(course_list)}
+        
+        Task: Pick the MOST relevant Course ID from the list.
+        If no course matches even slightly, return "none".
+        Respond ONLY with the ID number or "none". No text.
+        """
+
+        try:
+            chat_completion = client.chat.completions.create(
+                messages=[{"role": "user", "content": prompt}],
+                model="groq/compound-mini",
+                temperature=0.1 # Strictly matching ke liye kam temperature
+            )
+
+            best_match_id = chat_completion.choices[0].message.content.strip().lower()
+
+            if best_match_id == "none" or not best_match_id.isdigit():
+                return Response({"message": "No matching course found"}, status=404)
+
+            # 3. Match mil gaya, toh naya data create nahi karenge
+            # Sirf existing course ki ID bhejenge
+            return Response({
+                "message": "Match Found",
+                "course_id": int(best_match_id)
+            }, status=200)
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=500)

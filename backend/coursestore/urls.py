@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .views import CourseListAPIView,CourseDetailAPIView,GenerateRoadmapView
 # from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.views import TokenRefreshView
 urlpatterns = [
@@ -30,4 +31,8 @@ urlpatterns = [
   path('colleges/update/<int:pk>/', views.update_college, name='update_college'),
   path('colleges/delete/<int:pk>/', views.delete_college, name='delete_college'),
 
+
+  path('courses/', CourseListAPIView.as_view(), name='courses-list'),
+  path('courses/<int:pk>/content/', CourseDetailAPIView.as_view(), name='course-detail'),
+  path('generate-roadmap/', GenerateRoadmapView.as_view(), name='generate-roadmap'),
 ]

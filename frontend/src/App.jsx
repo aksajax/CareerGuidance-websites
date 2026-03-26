@@ -23,6 +23,12 @@ import Resume from './DashboardDetails/pages/Resume';
 import ResumeAI from './ResumeApp/Pages/Home/ResumeAI';
 import ResumeState from './ResumeApp/Context/ResumeState';
 
+import HomeRoadmap from './AIRoadmap/pages/Home';
+import CourseViewRoadmap from './AIRoadmap/pages/CourseView';
+import DashboardRoadmap from './AIRoadmap/pages/Dashboard';
+
+import Apps from './AIRoadmap/apps';
+
 
 
 
@@ -53,15 +59,18 @@ function App() {
             <Route path="/personal-info" element={<PersonalInfo />} />
             <Route path="/resumebuilder" element={<ResumeBuilder />} />
             <Route path="/resume" element={<Resume />} />
-            <Route 
-    path="/resumes" 
-    element={
-      <ResumeState>
-        <ResumeAI />
-      </ResumeState>
-    } 
-  />
-
+            <Route path="/resumes" element={<ResumeState> <ResumeAI /></ResumeState>} />
+            <Route
+          path="/dashboardRoadmap"
+          element={
+            
+              <Apps />
+            
+          }
+        />
+        <Route path="/roadmaphome" element={<HomeRoadmap />} />
+        <Route path="/course/:id" element={<CourseViewRoadmap />} />
+        <Route path="/roadmapdashboard" element={<DashboardRoadmap />} />
           </Route>
         </Routes>
       
