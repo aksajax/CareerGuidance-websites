@@ -332,7 +332,7 @@ class CourseDetailAPIView(APIView):
 
 
 # # Groq Client Initialize karein
-# GROQ_KEY = "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"
+
 # # Groq Client setup
 client = Groq(api_key=GROQ_KEY)
 
