@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     
     'corsheaders',
     'coursestore',
+    'quizapp',
+    'roadmaps',
 ]
 
 MIDDLEWARE = [
@@ -145,7 +147,8 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.AllowAny',
+        'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.permissions.AllowAny',
     ),
 }
 
@@ -158,3 +161,4 @@ SIMPLE_JWT = {
 }
 
 SITE_ID = 1
+GROQ_API_KEY='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'

@@ -9,36 +9,42 @@ import Sidebar from "./Sidebar";
 import ProductDetails from "../pages/ProductDetails";
 import ProfileSummary from "./pages/ProfileSummary";
 import Apps from "../AIRoadmap/apps";
+import ProfectionHome from "../components/MindLer/profectionHome";
+import ExploreColleges from "../components/MindLer/ExploreColleges";
+import CounsellorList from "../components/MindLer/CounsellorList";
+import QuizPreviewSection from "../Demo/QuizPreviewSection";
+import ResumeFeatureSection from "./pages/ResumeFeatureSection";
+import Indexmain from "../Notes/indexmain";
+import Demo from "../Notes/Demo";
+// import Notespage from "../Notes/CourseViewers/Notespage";
 function Dashboard() {
   const [activeSection, setActiveSection] = useState("dashboard");
 
   return (
-    <div className="flex min-h-screen bg-black text-white">
-
+    <div className="min-h-screen bg-black text-white">
+      
+      <ProfectionHome />
+      <ExploreColleges />
+      <CounsellorList />
+      <QuizPreviewSection />
+      <ResumeFeatureSection />
+      <Indexmain />
+      <Demo />
+      {/* <Notespage /> */}
+      
       {/* Sidebar */}
-      <Sidebar
+      {/* <Sidebar
         activeSection={activeSection}
         setActiveSection={setActiveSection}
       />
 
-      {/* Main Area */}
+      
       <div className="flex-1 mt-20">
-        {activeSection === "dashboard" && (
-
-
-          <ProfileSummary />
-          
-
-
-        )}
-
+        {activeSection === "dashboard" && <ProfileSummary />}
         {activeSection === "student" && <ProductDetails />}
-        {activeSection === "student" && <ProductDetails />}
+        {activeSection === "profile" && <Profile />}
         {activeSection === "roadmap" && <Apps />}
-        {activeSection === "student" && <ProductDetails />}
-
-
-      </div>
+      </div> */}
     </div>
   );
 }

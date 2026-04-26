@@ -1,16 +1,21 @@
-import React, { useContext, useEffect, useState } from 'react'
-import './userCollectData.css'
+import React, { useContext, useEffect, useState, forwardRef } from 'react'
 import { IoMdCloudUpload } from 'react-icons/io'
-
-import { Input, Heading, Textarea, Button, Box, Stack, Flex, Separator as Divider, Text } from '@chakra-ui/react'
+import { Input, Heading, Textarea, Button, Box, Stack, Flex, Text } from '@chakra-ui/react'
 import ResumeContext from '../../Context/ResumeContext'
 
-const UserDataCollect = () => {
+// --- 1. ForwardRef ka use kiya taaki BuilderArea ka ref direct Preview Area se link ho sake ---
+const UserDataCollect = forwardRef((props, ref) => {
     const { 
         themeData, checkAward, setCheckAward, 
         setThemeData, checkProj, checkWork, 
         setCheckProj, setCheckWork 
     } = useContext(ResumeContext)
+
+    // --- Modern Theme Constants ---
+    const neonGreen = "#a3ff12";
+    const darkBg = "#050505";
+    const cardBg = "rgba(255, 255, 255, 0.03)";
+    const glassBorder = "1px solid rgba(255, 255, 255, 0.1)";
 
     // --- States ---
     const [projectCount, setProjectCount] = useState(1)
@@ -26,10 +31,22 @@ const UserDataCollect = () => {
     const [workData, setWorkData] = useState({ workTitles: { wTitle1: "" }, workDesc: { wDescription1: "" } })
     const [personalData, setPersonalData] = useState({ 
         profileImage: 'https://www.w3schools.com/howto/img_avatar.png', 
-        name: "Your Name", summary: '', profile: "Work Profile", 
-        address: "Address", phone: "", email: "", skill: '', 
+        name: "", summary: '', profile: "", 
+        address: "", phone: "", email: "", skill: '', 
     })
     const [awardData, setAwardData] = useState({ awards: '' })
+
+    // --- Reusable Input Style ---
+    const inputStyle = {
+        bg: "rgba(255,255,255,0.05)",
+        border: "1px solid",
+        borderColor: "whiteAlpha.200",
+        _focus: { borderColor: neonGreen, boxShadow: `0 0 10px ${neonGreen}40` },
+        color: "white",
+        mb: 4,
+        rounded: "xl",
+        fontSize: "sm"
+    }
 
     // --- Handlers ---
     const handleChangePersonal = (e) => {
@@ -75,147 +92,163 @@ const UserDataCollect = () => {
     }, [personalData, projectData, educationData, workData, awardData, setThemeData])
 
     return (
-        <Flex direction={{ base: "column", md: "row" }} w="100%" pt="100px" gap={6} px={5} bg="gray.50" minH="100vh">
+        <Flex direction={{ base: "column", md: "row" }} w="100%" pt="100px" gap={8} px={8} bg={darkBg} minH="100vh">
             
-            {/* LEFT SIDE: FORM AREA (Scrollable) */}
-            <Box flex="1" h="85vh" overflowY="auto" p={6} bg="white" borderRadius="lg" boxShadow="md">
-                <div id="form-collect">
-                    {/* Personal Details Area */}
-                    <div id="form-personal" className='mb-4'>
-                        <Heading as='h4' size='lg' className='mb-2' color="teal.500">Personal Details</Heading>
-                        <Divider mb={4} />
-                        <Box className='my-2'>
-                            <div className='file'>
-                                <label htmlFor='input-file' style={{cursor: 'pointer', fontWeight: 'bold'}}>
-                                    <IoMdCloudUpload size={30} /> Select Profile Picture
+            {/* LEFT SIDE: FORM AREA */}
+            <Box 
+                flex="1.2" h="85vh" overflowY="auto" p={8} bg={cardBg} 
+                border={glassBorder} backdropFilter="blur(10px)" borderRadius="3xl"
+                sx={{
+                    '&::-webkit-scrollbar': { width: '5px' },
+                    '&::-webkit-scrollbar-thumb': { bg: 'whiteAlpha.300', borderRadius: 'full' },
+                }}
+            >
+                <Stack gap={10}>
+                    <Box>
+                        <Heading size="md" color={neonGreen} mb={6} textTransform="uppercase" letterSpacing="widest">
+                            Personal Details
+                        </Heading>
+                        <Flex align="center" gap={6} mb={6}>
+                            <Box position="relative">
+                                <img src={personalData.profileImage} alt="profile" style={{width: '90px', height: '90px', borderRadius: '24px', border: `2px solid ${neonGreen}`, objectFit: 'cover'}} />
+                                <label htmlFor='input-file' style={{position: 'absolute', bottom: '-5px', right: '-5px', background: neonGreen, borderRadius: '50%', padding: '6px', cursor: 'pointer', color: 'black'}}>
+                                    <IoMdCloudUpload size={18} />
                                 </label>
                                 <input name='profileImage' onChange={handleChangePersonal} id='input-file' type='file' hidden />
-                                <img className="blah" src={personalData.profileImage} alt="profile" style={{width: '70px', height: '70px', borderRadius: '50%', marginTop: '10px'}} />
-                            </div>
-                        </Box>
-                        <Input className='my-2' name='name' onChange={handleChangePersonal} placeholder='Your Name' />
-                        <Input className='my-2' name='summary' onChange={handleChangePersonal} placeholder='Your Summary' />
-                        <Input className='my-2' name='profile' onChange={handleChangePersonal} placeholder='Work Profile' />
-                        <Input className='my-2' name='address' onChange={handleChangePersonal} placeholder='Address' />
-                        <Input className='my-2' name='phone' onChange={handleChangePersonal} placeholder='Phone number' />
-                        <Input className='my-2' name='email' onChange={handleChangePersonal} placeholder='Email id' />
-                    </div>
+                            </Box>
+                            <Box flex="1">
+                                <Input {...inputStyle} name='name' onChange={handleChangePersonal} placeholder='Your Full Name' />
+                                <Input {...inputStyle} name='profile' onChange={handleChangePersonal} placeholder='Professional Title' />
+                            </Box>
+                        </Flex>
+                        <Textarea {...inputStyle} name='summary' onChange={handleChangePersonal} placeholder='Professional Summary' h="100px" />
+                        <Flex gap={4}>
+                            <Input {...inputStyle} name='email' onChange={handleChangePersonal} placeholder='Email id' />
+                            <Input {...inputStyle} name='phone' onChange={handleChangePersonal} placeholder='Phone number' />
+                        </Flex>
+                        <Input {...inputStyle} name='address' onChange={handleChangePersonal} placeholder='Address' />
+                    </Box>
 
-                    {/* Technical Skills Area */}
-                    <div className='mb-4'>
-                        <Heading as='h4' size='md' className='my-2'>Technical Skills</Heading>
-                        <Divider mb={2}/>
-                        <Input className='my-2' name='skill' onChange={handleChangePersonal} placeholder='Separate skills by comma' />
-                    </div>
+                    <Box>
+                        <Heading size="sm" color="white" mb={4}>Technical Skills</Heading>
+                        <Input {...inputStyle} name='skill' onChange={handleChangePersonal} placeholder='Separate skills by comma' />
+                    </Box>
 
-                    {/* Education Area */}
-                    <div className='mb-4'>
-                        <Heading as='h4' size='md' className='my-2'>Education</Heading>
-                        <Divider mb={2}/>
-                        <Button onClick={() => {
-                            const next = educationCount + 1;
-                            setEduIds([...eduIds, next]);
-                            setEducationCount(next);
-                        }} className='my-3 w-100' colorScheme='teal' variant='solid'>Add Education</Button>
+                    <Box>
+                        <Flex justify="space-between" align="center" mb={4}>
+                            <Heading size="sm" color="white">Education</Heading>
+                            <Button size="xs" variant="outline" color={neonGreen} borderColor={neonGreen} onClick={() => {
+                                const next = educationCount + 1;
+                                setEduIds([...eduIds, next]);
+                                setEducationCount(next);
+                            }}>+ Add Education</Button>
+                        </Flex>
                         {eduIds.map(id => (
-                            <Box key={id} mb={3}>
-                                <Input className='my-2' id={`eTitle${id}`} name='eName' onChange={handleChangeEducation} placeholder='Enter Title' />
-                                <Textarea className='my-2' id={`eDescription${id}`} name='eDescription' onChange={handleChangeEducation} placeholder='Description' />
+                            <Box key={id} p={4} bg="whiteAlpha.50" rounded="2xl" mb={4} border="1px solid rgba(255,255,255,0.05)">
+                                <Input {...inputStyle} id={`eTitle${id}`} name='eName' onChange={handleChangeEducation} placeholder='School/University Name' />
+                                <Textarea {...inputStyle} id={`eDescription${id}`} name='eDescription' onChange={handleChangeEducation} placeholder='Degree / Year / Grade' mb={0} />
                             </Box>
                         ))}
-                    </div>
+                    </Box>
 
-                    {/* Projects Area */}
-                    <div className='mb-4'>
-                        <Flex align='center' justify='space-between'>
-                            <Heading as='h4' size='md' className='my-2'>Projects</Heading>
-                            <input type="checkbox" checked={!checkProj} onChange={() => setCheckProj(!checkProj)} style={{width: '20px', height: '20px'}} />
+                    {/* Projects - Fixed isDisabled warning */}
+                    <Box>
+                        <Flex justify="space-between" align="center" mb={4}>
+                            <Flex align="center" gap={3}>
+                                <Heading size="sm" color="white">Projects</Heading>
+                                <input type="checkbox" checked={!checkProj} onChange={() => setCheckProj(!checkProj)} style={{accentColor: neonGreen}} />
+                            </Flex>
+                            <Button size="xs" disabled={checkProj} variant="outline" color={neonGreen} borderColor={neonGreen} onClick={() => {
+                                const next = projectCount + 1;
+                                setProjIds([...projIds, next]);
+                                setProjectCount(next);
+                            }}>+ Add Project</Button>
                         </Flex>
-                        <Divider mb={2}/>
-                        <Button disabled={checkProj} onClick={() => {
-                            const next = projectCount + 1;
-                            setProjIds([...projIds, next]);
-                            setProjectCount(next);
-                        }} className='my-3 w-100' colorScheme='teal' variant='solid'>Add Projects</Button>
                         {!checkProj && projIds.map(id => (
-                            <Box key={id} mb={3}>
-                                <Input className='my-2' disabled={checkProj} id={`pTitle${id}`} name='pName' onChange={handleChangeProject} placeholder='Enter Project Title' />
-                                <Textarea className='my-2' disabled={checkProj} id={`pDescription${id}`} name='pDescription' onChange={handleChangeProject} placeholder='Project Description' />
+                            <Box key={id} p={4} bg="whiteAlpha.50" rounded="2xl" mb={4} border="1px solid rgba(255,255,255,0.05)">
+                                <Input {...inputStyle} id={`pTitle${id}`} name='pName' onChange={handleChangeProject} placeholder='Project Title' />
+                                <Textarea {...inputStyle} id={`pDescription${id}`} name='pDescription' onChange={handleChangeProject} placeholder='Project Description' mb={0} />
                             </Box>
                         ))}
-                    </div>
+                    </Box>
 
-                    {/* Work Experience */}
-                    <div className='mb-4'>
-                        <Flex align='center' justify='space-between'>
-                            <Heading as='h4' size='md' className='my-2'>Work Experience</Heading>
-                            <input type="checkbox" checked={!checkWork} onChange={() => setCheckWork(!checkWork)} style={{width: '20px', height: '20px'}} />
+                    {/* Work - Fixed isDisabled warning */}
+                    <Box>
+                        <Flex justify="space-between" align="center" mb={4}>
+                            <Flex align="center" gap={3}>
+                                <Heading size="sm" color="white">Work Experience</Heading>
+                                <input type="checkbox" checked={!checkWork} onChange={() => setCheckWork(!checkWork)} style={{accentColor: neonGreen}} />
+                            </Flex>
+                            <Button size="xs" disabled={checkWork} variant="outline" color={neonGreen} borderColor={neonGreen} onClick={() => {
+                                const next = workCount + 1;
+                                setWorkIds([...workIds, next]);
+                                setWorkCount(next);
+                            }}>+ Add Experience</Button>
                         </Flex>
-                        <Divider mb={2}/>
-                        <Button disabled={checkWork} onClick={() => {
-                            const next = workCount + 1;
-                            setWorkIds([...workIds, next]);
-                            setWorkCount(next);
-                        }} className='my-3 w-100' colorScheme='teal' variant='solid'>Add Experience</Button>
                         {!checkWork && workIds.map(id => (
-                            <Box key={id} mb={3}>
-                                <Input className='my-2' id={`wTitle${id}`} name='wName' onChange={handleChangeWork} placeholder='Enter Job Title' />
-                                <Textarea className='my-2' id={`wDescription${id}`} name='wDescription' onChange={handleChangeWork} placeholder='Work Description' />
+                            <Box key={id} p={4} bg="whiteAlpha.50" rounded="2xl" mb={4} border="1px solid rgba(255,255,255,0.05)">
+                                <Input {...inputStyle} id={`wTitle${id}`} name='wName' onChange={handleChangeWork} placeholder='Job Title / Company' />
+                                <Textarea {...inputStyle} id={`wDescription${id}`} name='wDescription' onChange={handleChangeWork} placeholder='Work Description' mb={0} />
                             </Box>
                         ))}
-                    </div>
+                    </Box>
 
-                    {/* Awards Area */}
-                    <div className='mb-4'>
-                        <Flex align='center' justify='space-between'>
-                            <Heading as='h4' size='md' className='my-2'>Awards & Achievement</Heading>
-                            <input type="checkbox" checked={!checkAward} onChange={() => setCheckAward(!checkAward)} style={{width: '20px', height: '20px'}} />
+                    <Box>
+                        <Flex align="center" gap={3} mb={4}>
+                            <Heading size="sm" color="white">Awards & Achievements</Heading>
+                            <input type="checkbox" checked={!checkAward} onChange={() => setCheckAward(!checkAward)} style={{accentColor: neonGreen}} />
                         </Flex>
-                        <Divider mb={2}/>
-                        <Textarea className='my-2' name='awards' disabled={checkAward} onChange={(e) => setAwardData({ awards: e.target.value })} placeholder='Use comma to separate Achievement' />
-                    </div>
-                </div>
+                        <Textarea {...inputStyle} name='awards' disabled={checkAward} onChange={(e) => setAwardData({ awards: e.target.value })} placeholder='Separate achievements by comma' />
+                    </Box>
+                </Stack>
             </Box>
 
-            {/* RIGHT SIDE: LIVE PREVIEW (Sticky) */}
-            <Box flex="1" h="85vh" position="sticky" top="100px" bg="white" borderRadius="lg" boxShadow="2xl" p={8} overflowY="auto">
-                <Text fontSize="xs" fontWeight="bold" color="gray.400" mb={4} textAlign="right">LIVE PREVIEW</Text>
+            {/* --- 2. RIGHT SIDE: LIVE PREVIEW (Target for Print) --- */}
+            <Box 
+                flex="1" h="85vh" position="sticky" top="100px" 
+                bg="#111" borderRadius="3xl" border={glassBorder} 
+                overflow="hidden" boxShadow="0 20px 50px rgba(0,0,0,0.5)"
+            >
+                <Box bg="whiteAlpha.100" p={3} textAlign="center">
+                    <Text fontSize="10px" fontWeight="black" letterSpacing="3px" color={neonGreen}>NEURAL PREVIEW ENGINE</Text>
+                </Box>
                 
-                {/* Simulated Template Preview */}
-                <Box border="1px solid" borderColor="gray.200" p={6} minH="100%" id="resume-preview-area">
-                    <Flex align="center" direction="column" mb={5}>
-                        <img src={personalData.profileImage} alt="profile" style={{width: '100px', height: '100px', borderRadius: '50%', marginBottom: '10px'}} />
-                        <Heading size="lg">{personalData.name || "Full Name"}</Heading>
-                        <Text color="teal.600" fontWeight="bold">{personalData.profile || "Professional Title"}</Text>
-                    </Flex>
-                    
-                    <Divider my={4} />
-                    
-                    <Stack spacing={4}>
+                {/* 3. Yahan ref={ref} attach kiya hai jo BuilderArea se aa raha hai */}
+                <Box ref={ref} p={10} overflowY="auto" h="calc(100% - 40px)" id="resume-preview-area" bg="white">
+                    <Flex justify="space-between" align="flex-start" mb={10}>
                         <Box>
-                            <Heading size="xs" textTransform="uppercase">Contact Information</Heading>
-                            <Text fontSize="sm">📧 {personalData.email || "email@example.com"}</Text>
-                            <Text fontSize="sm">📞 {personalData.phone || "+91 XXXXXXXXXX"}</Text>
-                            <Text fontSize="sm">📍 {personalData.address || "City, Country"}</Text>
+                            <Heading size="xl" color="black">{personalData.name || "YOUR NAME"}</Heading>
+                            <Text color="#319795" fontWeight="bold" mt={1}>{personalData.profile || "PROFESSIONAL TITLE"}</Text>
                         </Box>
-                        
-                        <Box>
-                            <Heading size="xs" textTransform="uppercase">Summary</Heading>
-                            <Text fontSize="sm">{personalData.summary || "Your career summary will appear here..."}</Text>
+                        <img src={personalData.profileImage} alt="profile" style={{width: '70px', height: '70px', borderRadius: '10px', objectFit: 'cover'}} />
+                    </Flex>
+
+                    <Stack gap={6} color="black">
+                        <Box borderBottom="1px solid" borderColor="gray.200" pb={4}>
+                            <Text color="gray.800" fontSize="xs" fontWeight="black" mb={2}>CONTACT</Text>
+                            <Text fontSize="xs">📧 {personalData.email || "email@example.com"}</Text>
+                            <Text fontSize="xs">📞 {personalData.phone || "+91 XXXXXXXXXX"}</Text>
+                            <Text fontSize="xs">📍 {personalData.address || "City, Country"}</Text>
                         </Box>
 
                         <Box>
-                            <Heading size="xs" textTransform="uppercase">Skills</Heading>
-                            <Text fontSize="sm">{personalData.skill || "No skills added yet"}</Text>
+                            <Text color="gray.800" fontSize="xs" fontWeight="black" mb={2}>SUMMARY</Text>
+                            <Text fontSize="xs" lineHeight="relaxed">{personalData.summary || "Summary content..."}</Text>
                         </Box>
-                        
-                        {/* Baaki sections ko bhi map karke yahan dikha sakte hain */}
+
+                        <Box>
+                            <Text color="gray.800" fontSize="xs" fontWeight="black" mb={2}>SKILLS</Text>
+                            <Flex wrap="wrap" gap={2}>
+                                {(personalData.skill || "Skills").split(',').map((s, i) => (
+                                    <Text key={i} px={2} py={1} bg="gray.100" rounded="md" fontSize="10px" color="black">{s.trim()}</Text>
+                                ))}
+                            </Flex>
+                        </Box>
                     </Stack>
                 </Box>
             </Box>
-
         </Flex>
     )
-}
+})
 
 export default UserDataCollect;

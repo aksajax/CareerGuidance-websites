@@ -1,4 +1,5 @@
 import os
+from quizapp.models import LearningPath
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -257,7 +258,7 @@ def delete_college(request, pk):
 
 
 # API Key
-GROQ_KEY = os.getenv("GROQ_API_KEY")
+GROQ_KEY = os.getenv("")
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -272,10 +273,13 @@ def website_chatbot(request):
 
         # DB se data nikalna
         colleges = College.objects.all()
+        learning_paths = LearningPath.objects.all()
         college_list = []
         for c in colleges:
             college_list.append(f"{c.name} in {c.location} (Fees: {c.fees})")
-        
+        for lp in learning_paths:
+            college_list.append(f"{lp.title} - {lp.description}")
+
         context_data = ", ".join(college_list)
 
         # AI Call

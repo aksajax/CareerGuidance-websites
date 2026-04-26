@@ -13,6 +13,8 @@ import FinalCTAFooter from './minipages/FinalCTAFooter'
 import Home from './Home'
 import Dashboard from '../DashboardDetails/Dashboard'
 import { getAccessToken } from '../utils/auth'
+import LandingPage from '../DashboardDetails/LandingPage'
+import CareerLanding from '../Demo/CareerLanding'
 
 function Homepage() {
   const isLoggedIn = !!getAccessToken();
@@ -36,6 +38,8 @@ function Homepage() {
 <ExplainerContent />
 <NearbyColleges />
 <StudentDetails />
+<LandingPage />
+{/* <CareerLanding /> */}
 <FinalCTAFooter />
    
     </>) : (

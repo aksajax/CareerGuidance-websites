@@ -28,6 +28,9 @@ import CourseViewRoadmap from './AIRoadmap/pages/CourseView';
 import DashboardRoadmap from './AIRoadmap/pages/Dashboard';
 
 import Apps from './AIRoadmap/apps';
+import LearningCenter from './CareerQuiz/LearningCenter';
+import Indexmain from './Notes/indexmain';
+// import Notespage from './Notes/CourseViewers/Notespage';
 
 
 
@@ -60,6 +63,11 @@ function App() {
             <Route path="/resumebuilder" element={<ResumeBuilder />} />
             <Route path="/resume" element={<Resume />} />
             <Route path="/resumes" element={<ResumeState> <ResumeAI /></ResumeState>} />
+            <Route path="/careerquiz" element={<LearningCenter />} />
+            <Route path="/airoadmap" element={<Indexmain />} />
+
+            {/* <Route path="/notes" element={<Notespage />} /> */}
+
             <Route
           path="/dashboardRoadmap"
           element={

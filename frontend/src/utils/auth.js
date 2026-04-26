@@ -36,3 +36,11 @@ export const authFetch = (url, options = {}) => {
     headers['Content-Type'] = headers['Content-Type'] || 'application/json';
     return fetch(url, {...options, headers});
 };
+
+// const API_BASE = 'https://smart-career-guidance-system-kjrp.onrender.com/api';
+export const API_BASE = window.location.hostname === 'localhost' 
+    ? 'http://localhost:8000/api' 
+    : 'https://smart-career-guidance-system-kjrp.onrender.com/api';
+export const fetchPaths = () => fetch(`${API_BASE}/learning-paths/`).then(res => res.json());
+export const fetchTopics = (pathId) => fetch(`${API_BASE}/topics/?path_id=${pathId}`).then(res => res.json());
+export const fetchQuiz = (topicId) => fetch(`${API_BASE}/quiz-items/?topic_id=${topicId}`).then(res => res.json());

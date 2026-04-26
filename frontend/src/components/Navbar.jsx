@@ -341,7 +341,12 @@ function Navbar() {
               </div>
             </div>
         
-            
+               <Link to="/airoadmap" className="hover:text-white">
+                      AI Roadmap
+                    </Link>
+               <Link to="/careerquiz" className="hover:text-white">
+                      CareerQuiz
+                    </Link>
                     <Link to="/colleges" className="hover:text-white">
                       CollegeList
                     </Link>

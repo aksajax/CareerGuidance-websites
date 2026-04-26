@@ -36,7 +36,9 @@ function FinalCTAFooter() {
                                hover:bg-black/10 transition">
               Explore Colleges
             </button>
+
           </div>
+          {/* <img src="" alt="CTA Image" className="mx-auto mt-8 rounded-lg shadow-lg" /> */}
         </div>
       </div>
 
