@@ -258,7 +258,7 @@ def delete_college(request, pk):
 
 
 # API Key
-GROQ_KEY = os.getenv("")
+
 
 @api_view(['POST'])
 @permission_classes([AllowAny])

@@ -11,8 +11,8 @@ from .models import Roadmap, Milestone
 from .serializers import RoadmapSerializer, RoadmapCreateSerializer
 
 # Groq Client Initializing
-GROQ_KEY = os.getenv("")
-client = Groq(api_key=GROQ_KEY)
+
+
 
 class GenerateRoadmapView(APIView):
     permission_classes = [IsAuthenticated]
